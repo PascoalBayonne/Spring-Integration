@@ -10,22 +10,27 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-core:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-beans:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-expression:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-web:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-core:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.retry:spring-retry:1.1.2.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-mail:4.2.3.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-file:4.2.3.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-core:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-web:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-core:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.0.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.retry:spring-retry:1.2.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.1.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-mail:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-file:4.3.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.integration:spring-integration-jdbc:5.0.5.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.0.6.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: mysql:mysql-connector-java:8.0.11" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.google.protobuf:protobuf-java:2.6.0" level="project" />
   </component>
 </module>

@@ -1,11 +1,6 @@
 package com.arpit.spring.integration.config;
 
-import static com.arpit.spring.integration.contants.ApplicationConstants.TXT;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,15 +17,25 @@ import org.springframework.integration.file.filters.CompositeFileListFilter;
 import org.springframework.integration.file.filters.FileListFilter;
 import org.springframework.integration.file.filters.FileSystemPersistentAcceptOnceFileListFilter;
 import org.springframework.integration.file.filters.SimplePatternFileListFilter;
-import org.springframework.integration.metadata.PropertiesPersistingMetadataStore;
+import org.springframework.integration.jdbc.metadata.JdbcMetadataStore;
+import org.springframework.integration.metadata.ConcurrentMetadataStore;
+import org.springframework.integration.metadata.MetadataStore;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import javax.sql.DataSource;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.arpit.spring.integration.contants.ApplicationConstants.TXT;
 
 @IntegrationComponentScan
 @EnableIntegration
 @Configuration
 public class IntegrationConfig {
 
-	@Value("#{'${metadata.dir}'}")
-	private String metadataDir;
+//	@Value("#{'${metadata.dir}'}")
+//	private String metadataDir;
 
 	@Value("#{'${polling.dir}'}")
 	private String pollingDir;
@@ -38,6 +43,26 @@ public class IntegrationConfig {
 	@Bean
 	protected DirectChannel fileIn() {
 		return new DirectChannel();
+	}
+
+	@Autowired
+	private DataSource dataSource;
+
+
+	@Bean
+	public MetadataStore metadataStore(DataSource dataSource) {
+		return new JdbcMetadataStore(dataSource);
+	}
+
+	@Bean
+	public static  DataSource vendorDataSource(){
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/MetadataStore");
+		dataSource.setUsername("root");
+		dataSource.setPassword("root");
+
+		return dataSource;
 	}
 
 	@Bean
@@ -51,10 +76,12 @@ public class IntegrationConfig {
 
 	@Bean
 	public DirectoryScanner dirScanner() throws Exception {
+
 		WatchServiceDirectoryScanner watchServiceDirectoryScanner = new WatchServiceDirectoryScanner(
 				pollingDir);
 		watchServiceDirectoryScanner.setFilter(compositeFilter());
 		watchServiceDirectoryScanner.setAutoStartup(true);
+
 		return watchServiceDirectoryScanner;
 	}
 
@@ -66,18 +93,23 @@ public class IntegrationConfig {
 	@Bean
 	public FileSystemPersistentAcceptOnceFileListFilter persistentFilter()
 			throws Exception {
-		FileSystemPersistentAcceptOnceFileListFilter fileSystemPersistentAcceptOnceFileListFilter = new FileSystemPersistentAcceptOnceFileListFilter(
-				metadataStore(), "");
-		fileSystemPersistentAcceptOnceFileListFilter.setFlushOnUpdate(true);
-		return fileSystemPersistentAcceptOnceFileListFilter;
+		try (FileSystemPersistentAcceptOnceFileListFilter fileSystemPersistentAcceptOnceFileListFilter = new FileSystemPersistentAcceptOnceFileListFilter(
+				(ConcurrentMetadataStore) metadataStore(dataSource), "")) {
+			fileSystemPersistentAcceptOnceFileListFilter.setFlushOnUpdate(true);
+
+			JdbcMetadataStore jdbcMetadataStore = new JdbcMetadataStore(dataSource);
+			jdbcMetadataStore.afterPropertiesSet();
+
+			return fileSystemPersistentAcceptOnceFileListFilter;
+		}
 	}
 
-	private PropertiesPersistingMetadataStore metadataStore() throws Exception {
-		PropertiesPersistingMetadataStore propertiesPersistingMetadataStore = new PropertiesPersistingMetadataStore();
-		propertiesPersistingMetadataStore.setBaseDirectory(metadataDir);
-		propertiesPersistingMetadataStore.afterPropertiesSet();
-		return propertiesPersistingMetadataStore;
-	}
+//	private PropertiesPersistingMetadataStore metadataStore() throws Exception {
+//		PropertiesPersistingMetadataStore propertiesPersistingMetadataStore = new PropertiesPersistingMetadataStore();
+//		propertiesPersistingMetadataStore.setBaseDirectory(metadataDir);
+//		propertiesPersistingMetadataStore.afterPropertiesSet();
+//		return propertiesPersistingMetadataStore;
+//	}
 
 	private List<FileListFilter<File>> getFileListFilterList(final String pattern) throws Exception {
 		List<FileListFilter<File>> fileListFilterList = new ArrayList<>();
