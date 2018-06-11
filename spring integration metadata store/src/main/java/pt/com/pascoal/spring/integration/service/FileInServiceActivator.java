@@ -1,11 +1,10 @@
-package com.arpit.spring.integration.service;
+package pt.com.pascoal.spring.integration.service;
 
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

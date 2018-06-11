@@ -1,4 +1,4 @@
-package com.arpit.spring.integration.config;
+package pt.com.pascoal.spring.integration.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,7 +9,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 @Import({ IntegrationConfig.class })
-@ComponentScan(basePackages = "com.arpit.spring.integration.service")
+@ComponentScan(basePackages = "pt.com.pascoal.spring.integration.service")
 @PropertySource(value = { "classpath:application.properties" })
 public class ApplicationConfig {
 

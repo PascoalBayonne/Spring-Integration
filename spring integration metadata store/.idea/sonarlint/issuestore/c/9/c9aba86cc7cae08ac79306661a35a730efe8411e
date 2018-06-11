@@ -1,0 +1,7 @@
+
+Esquid:S1068"*Remove this unused "LOGGER" private field.(ÒÑŒ;8ğ›‰¿,
+vsquid:CallToDeprecatedMethod"DRemove this use of "WatchServiceDirectoryScanner"; it is deprecated.(Ò‰â“üÿÿÿÿ8ğ›‰¿,
+vsquid:CallToDeprecatedMethod"DRemove this use of "WatchServiceDirectoryScanner"; it is deprecated.(Ò‰â“üÿÿÿÿ8ğ›‰¿,
+lsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(¾¬éµûÿÿÿÿ8ğ›‰¿,
+lsquid:CommentedOutCodeLine"<This block of commented-out lines of code should be removed.(˜ç±£şÿÿÿÿ8Å÷›‰¿,
+Ysquid:UselessImportCheck"0Remove this unused import 'java.nio.file.Files'.(‚ƒü8ğ›‰¿,

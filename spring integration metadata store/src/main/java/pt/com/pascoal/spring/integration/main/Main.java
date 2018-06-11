@@ -1,4 +1,4 @@
-package com.arpit.spring.integration.main;
+package pt.com.pascoal.spring.integration.main;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

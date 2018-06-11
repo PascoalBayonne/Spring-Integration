@@ -1,8 +1,8 @@
-package com.arpit.spring.integration.contants;
+package pt.com.pascoal.spring.integration.contants;
 
 public class ApplicationConstants {
 
-	/** Don't let anyone else instantiate this class */
+
 	private ApplicationConstants() {
 		throw  new IllegalStateException("utility uses only");
 	}
