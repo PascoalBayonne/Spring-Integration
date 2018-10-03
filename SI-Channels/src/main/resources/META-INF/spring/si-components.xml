@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+	http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd">
+
+
+    <int-stream:stdin-channel-adapter id="producer"
+                                      charset="UTF-8"
+                                      channel="messageChannel"/>
+
+    <int:poller id="defaultPoller"
+                default="true"
+                max-messages-per-poll="5"
+                fixed-rate="200"/>
+
+
+    <!--A couple of stdout-channel-adapters that wrap the Java Standard Output stream. They take the messages from the associated channel and display it to the Console -->
+    <int-stream:stdout-channel-adapter
+            id="consumer1"
+            channel="messageChannel"
+            append-newline="true"/>
+
+    <int-stream:stdout-channel-adapter
+            id="consumer2"
+            channel="messageChannel"
+            append-newline="true"/>
+
+    <!--Create subscribeChannel. In this case, you have two subscribers – the two stdout-channel-adapters you created in the previous steps-->
+    <int:publish-subscribe-channel id="messageChannel"/>
+
+    <!-- Pollable channels require a queue for potentially buffering messages with a configuration determined capacity-->
+    <!--<int:channel id="messageChannel">-->
+        <!--<int:queue capacity="2" />-->
+    <!--</int:channel>-->
+
+
+</beans>

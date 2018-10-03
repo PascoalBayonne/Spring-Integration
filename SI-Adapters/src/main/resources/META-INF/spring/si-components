@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+
+	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+
+    <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+    <!--<property name="location" ref="application.properties"/>-->
+    <!--</bean>-->
+
+    <int-file:inbound-channel-adapter id="producer-inbound-adapter"
+                                      directory="C:\\File\\inbound\\"
+                                      filename-pattern="*.csv"
+                                      auto-create-directory="true"
+                                      prevent-duplicates="true"/>
+    <!--polling every 20 seconds -->
+    <int:poller id="defaultPoller"
+                default="true"
+                max-messages-per-poll="5"
+                fixed-rate="200"/>
+
+    <int-file:file-to-string-transformer
+            input-channel="producer-inbound-adapter"
+            output-channel="fileToString"/>
+
+    <int:channel id="fileToString"/>
+
+    <int:service-activator input-channel="fileToString"
+                           output-channel="consumer-outbound-adapter"
+                           ref="handler" method="handleString"/>
+
+
+    <int-file:outbound-channel-adapter directory="C:\\File\\outbound"
+                                       id="consumer-outbound-adapter"/>
+
+
+    <bean id="handler" class="com.pascoal.service.Handler"/>
+
+    <!-- Pollable channels require a queue for potentially buffering messages with a configuration determined capacity-->
+    <!--<int:channel id="messageChannel">-->
+    <!--<int:queue capacity="2" />-->
+    <!--</int:channel>-->
+
+
+</beans>

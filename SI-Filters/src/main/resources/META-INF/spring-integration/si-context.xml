@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+	http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd">
+
+    <int:channel id="inboundChannel"/>
+    <!-- a direct channel -->
+    <int:channel id="outboundChannel"/>
+
+    <int-file:inbound-channel-adapter id="producer-file-adapter"
+                                      channel="inboundChannel"
+                                      directory="C:\\File\\inbound"
+                                      filename-pattern="*.csv" prevent-duplicates="true"/>
+    <!--polling every 20 seconds -->
+    <int:poller id="defaultPoller"
+                default="true"
+                max-messages-per-poll="5"
+                fixed-rate="200"/>
+
+
+    <int-file:outbound-channel-adapter id="consumer-file-adapter"
+                                       channel="outboundChannel"
+                                       directory="C:\\File\\outbound"/>
+
+    <int:filter id="file-filtration" input-channel="inboundChannel"
+                output-channel="outboundChannel"
+                ref="custom-file-filter"/>
+
+    <bean id="custom-file-filter" class="com.pascoal.filters.CustomFileFilter"/>
+
+
+</beans>
