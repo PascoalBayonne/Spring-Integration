@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>SI-Transformers</artifactId>
+        <groupId>com.pascoal</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../SI-Transformers/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>SI-Transformer-PTII</artifactId>
+
+    <description>This Spring integration project relates topics about Transformers</description>
+
+    <developers>
+        <developer>
+            <name>Pascoal francisco Bayonne</name>
+            <email>eddybayonne@gmail.com</email>
+            <roles>
+                <role>
+                    Software Engineer
+                </role>
+            </roles>
+        </developer>
+    </developers>
+    <modules>
+        <module>../SI-Transformer-PT-II</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springframework.version>4.0.4.RELEASE</springframework.version>
+        <spring.integration.version>4.0.0.RELEASE</spring.integration.version>
+        <spring.integration.xml.version>4.0.0.RELEASE</spring.integration.xml.version>
+        <log4j.version>1.2.17</log4j.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-core</artifactId>
+            <version>${spring.integration.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-stream</artifactId>
+            <version>${spring.integration.version}</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>log4j</groupId>-->
+        <!--<artifactId>log4j</artifactId>-->
+        <!--<version>${log4j.version}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-file</artifactId>
+            <version>${spring.integration.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-xml</artifactId>
+            <version>${spring.integration.version}</version>
+        </dependency>
+
+    </dependencies>
+</project>
