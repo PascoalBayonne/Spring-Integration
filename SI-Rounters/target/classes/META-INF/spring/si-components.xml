@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-file="http://www.springframework.org/schema/integration/file"
+       xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+
+	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+	http://www.springframework.org/schema/integration/xml http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd">
+
+    <int:channel id="inboundChannel"/>
+
+    <int-file:inbound-channel-adapter id="file-producer"
+                                      directory="C:\\File\\inbound"
+                                      filename-pattern="*.xml"
+                                      channel="inboundChannel"
+                                      prevent-duplicates="true">
+        <int:poller fixed-rate="60"/>
+    </int-file:inbound-channel-adapter>
+
+
+    <int-file:file-to-string-transformer id="file-2-string-transformer"
+                                         input-channel="inboundChannel"
+                                         output-channel="xml-inboundChannel"
+                                         charset="UTF-8" />
+
+    <int:channel id="xml-inboundChannel"/>
+
+
+
+
+    <!--Add two outbound file adapters. Add two file adapters; one for Portugal ship orders and one for Angola ship orders. Each file adapter will place the messages it receives from the appropriate message channel in separate file system directories so that the routing can be seen to work-->
+    <int-file:outbound-channel-adapter id="consumer-file-adapter1"
+                                       directory="C:\\File\\outbound\\portugalOutboundFolder"
+                                       auto-create-directory="true"
+                                       channel="portugalFileChannel"/>
+
+    <int-file:outbound-channel-adapter id="consumer-file-adapter2"
+                                       directory="C:\\File\\outbound\\angolaOutboundFolder"
+                                       auto-create-directory="true"
+                                       channel="angolaFileChannel"/>
+
+
+
+    <!-- two messages channels – one for Portugal ship orders and one for Angola ship orders.-->
+    <int:channel id="portugalFileChannel"/>
+    <int:channel id="angolaFileChannel"/>
+
+    <!--Add an XPath message router. The message router should use and XPath expression to get the value in the <shiporder><shipto><country> element and map it to the appropriate message channel as defined in step-->
+    <int-xml:xpath-router id="orderTypeRouter"
+                          input-channel="xml-inboundChannel">
+        <int-xml:xpath-expression expression="/shiporder/shipto/country" />
+        <int-xml:mapping value="Portugal" channel="portugalFileChannel" />
+        <int-xml:mapping value="Angola" channel="angolaFileChannel" />
+    </int-xml:xpath-router>
+
+    <!--CREATING A RECIPIENT ROUTER: which will contain some channels to send all messages from angola -->
+    <int:channel id="angolaServiceActivatorChannel"/>
+    <int:channel id="angolaChannel"/>
+
+    <int:service-activator id="printing-service-activator"
+                           input-channel="angolaServiceActivatorChannel" ref="serviceActivator" />
+
+    <bean id="serviceActivator" class="com.pascoal.service.CustomServiceActivator"/>
+
+    <!--Add a recipient list router to distribute a copy of the Angola ship order messages from the angolaChannel to both the norwayFileChannel and norwaySAChannel.-->
+    <int:recipient-list-router input-channel="xml-inboundChannel">
+        <!--<int:recipient channel="" />-->
+        <int:recipient channel="angolaServiceActivatorChannel" />
+    </int:recipient-list-router>
+
+
+
+
+</beans>
