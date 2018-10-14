@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-file="http://www.springframework.org/schema/integration/file"
+	xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+	xmlns:int-xml="http://www.springframework.org/schema/integration/xml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+	http://www.springframework.org/schema/integration/stream http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+	http://www.springframework.org/schema/integration/file http://www.springframework.org/schema/integration/file/spring-integration-file.xsd
+	http://www.springframework.org/schema/integration/xml http://www.springframework.org/schema/integration/xml/spring-integration-xml.xsd">
+
+	<!-- Adapter for reading files -->
+
+	<int-file:inbound-channel-adapter id="producer-file-adapter"
+		channel="inboundChannel" directory="file:c://inboundXML"
+		prevent-duplicates="true">
+		<int:poller fixed-rate="5000" />
+	</int-file:inbound-channel-adapter>
+
+	<int:channel id="inboundChannel" />
+
+	<int-file:file-to-string-transformer
+		id="file-2-string-transformer" input-channel="inboundChannel"
+		output-channel="xml-inboundChannel" charset="UTF-8" />
+
+	<int:channel id="xml-inboundChannel" />
+
+	<int-xml:unmarshalling-transformer
+		id="xml-2-object-transformer" input-channel="xml-inboundChannel"
+		output-channel="shipOrder-Channel" unmarshaller="jaxbMarshaller" />
+
+	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="contextPath" value="com.intertech.domain" />
+	</bean>
+
+	<int:channel id="shipOrder-Channel" />
+
+
+
+	<int:channel id="outboundChannel" />
+
+	<int:service-activator id="printing-service-activator"
+		input-channel="outboundChannel" ref="serviceActivator" />
+	<bean id="serviceActivator" class="com.intertech.lab6.ExampleServiceActivator" />
+
+</beans>
+

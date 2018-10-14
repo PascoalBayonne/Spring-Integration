@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shiporder orderid="889923"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="shiporder.xsd">
+  <orderperson>John Smith</orderperson>
+  <shipto>
+    <name>George Blatt</name>
+    <address>Elm St</address>
+    <city>New Orleans</city>
+    <country>USA</country>
+  </shipto>
+  <item>
+    <title>Hide your heart</title>
+    <quantity>2</quantity>
+    <price>19.80</price>
+  </item>
+</shiporder>
