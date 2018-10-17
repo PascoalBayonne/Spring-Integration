@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/batch"
+             xmlns:util="http://www.springframework.org/schema/util"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd
+                http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <beans:import resource="context.xml"/>
+
+    <beans:bean id="itemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+        <beans:property name="resource" value="file:///#{jobParameters['input.file.name']}"/>
+        <beans:property name="lineMapper">
+            <beans:bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <beans:property name="lineTokenizer">
+                    <beans:bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <beans:property name="names" value="fullName,gender,email,phoneNumber,address,product"/>
+                    </beans:bean>
+                </beans:property>
+                <beans:property name="fieldSetMapper">
+                    <beans:bean class="org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper"/>
+                </beans:property>
+            </beans:bean>
+        </beans:property>
+        <beans:property name="strict" value="false"/>
+    </beans:bean>
+
+
+    <beans:bean id="itemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="sql">
+            <beans:value>
+                <![CDATA[insert into customer (fullName, gender,email,phoneNumber,address,product)
+                                        values (:fullName, :gender, :email, :phoneNumber, :address, :product);]]>
+            </beans:value>
+        </beans:property>
+        <beans:property name="itemSqlParameterSourceProvider">
+            <beans:bean class="com.pascoal.spring.batch.writer.FieldSetSQLParameterSource"/>
+        </beans:property>
+    </beans:bean>
+
+    <job id="importCustomers">
+        <step id="loadCustomers">
+            <tasklet>
+                <chunk reader="itemReader" writer="itemWriter" commit-interval="300"/>
+            </tasklet>
+        </step>
+    </job>
+
+
+</beans:beans>
