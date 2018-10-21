@@ -56,19 +56,22 @@
 
     <int:channel id="jobExecutions"/>
 
-
     <int:gateway id="notificationExecutionsListener"
                  service-interface="org.springframework.batch.core.JobExecutionListener"
                  default-request-channel="jobExecutions"/>
+
 
     <int:router id="jobExecutionRouter"
                 input-channel="jobExecutions" >
         <bean class="com.pascoal.spring.integration.routers.JobExecutionRouter"/>
     </int:router>
 
+
     <int:channel id="completeApplication">
         <int:queue capacity="10"/>
     </int:channel>
+
+
 
 
 

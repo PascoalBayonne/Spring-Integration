@@ -2,63 +2,81 @@ package com.pascoal.spring.batch.listener;
 
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
-public class CustomJobExecutionListener implements JobExecutionListener, InitializingBean {
+@Component
+public class CustomJobExecutionListener implements JobExecutionListener,InitializingBean {
 
     private static final Logger logger = Logger.getLogger(CustomJobExecutionListener.class.getName());
-    private static final String COMPLETED_CODE ="COMPLETED";
+    private static final String COMPLETED_STATUS = "COMPLETED";
 
-    private Path processedFolderLocation;
-    private Path inputFilename;
+    private File fileOutput;
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-
+        logger.info("Job started as follow :" + jobExecution.getExecutionContext());
     }
 
     @Override
     public void afterJob(JobExecution jobExecution) {
-        if (COMPLETED_CODE.equalsIgnoreCase(jobExecution.getExitStatus().getExitCode())){
-            logger.info("Execution after Job");
-            moveFileToProcessedFolder(inputFilename, processedFolderLocation);
+        JobParameters jobParameters = jobExecution.getJobParameters();
+        String filename = jobParameters.getString("input.file.name");
+        
+        if (filename.isEmpty()){
+            return;
         }
-    }
+        
+        Path sourceFile = Paths.get(filename);
+        Path targetFolder = fileOutput.toPath();
 
-    private void moveFileToProcessedFolder(Path inputFilename, Path processedFolderLocation) {
-        logger.info("Moving the processed file to new folder: PROCESSED_DIRECTORY");
-        if (Files.notExists(processedFolderLocation)) {
+        logger.info(jobExecution.getExitStatus().getExitCode());
+
+        if (COMPLETED_STATUS.equalsIgnoreCase(jobExecution.getExitStatus().getExitCode())) {
             try {
-                Files.createDirectory(processedFolderLocation);
-            } catch (IOException e) {
-                e.printStackTrace();
+                moveFileToProcessedFolder(sourceFile, targetFolder);
+            } catch (Exception e) {
+                logger.info(e.getMessage());
             }
         }
 
+    }
+
+    private void moveFileToProcessedFolder(Path sourceFile, Path targetFolder) {
+        logger.info("Moving file to processed folder");
+
         try {
-            Files.move(inputFilename.toAbsolutePath(), processedFolderLocation.resolve(inputFilename.getFileName() + "_PROCESSED"), StandardCopyOption.REPLACE_EXISTING);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+            Files.move(sourceFile, targetFolder.resolve(LocalDateTime.now().format(dateTimeFormatter) + "_DONE"), StandardCopyOption.REPLACE_EXISTING);
+
         } catch (IOException e) {
-            logger.info("Error while trying to move the processed file: ");
-            logger.info(e.getMessage());
+            logger.warning("Couldn't move the file");
+            e.printStackTrace();
         }
     }
 
-    public void setProcessedFolderLocation(Path processedFolderLocation) {
-        this.processedFolderLocation = processedFolderLocation;
-    }
-
-    public void setInputFilename(Path inputFilename) {
-        this.inputFilename = inputFilename;
+    public void setFileOutput(File fileOutput) {
+        this.fileOutput = fileOutput;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        Assert.notNull(fileOutput, new StringBuilder().append("The path ")
+                .append(fileOutput.getAbsolutePath())
+                .append(" doesn't exists. Please provide it")
+                .toString());
     }
 }

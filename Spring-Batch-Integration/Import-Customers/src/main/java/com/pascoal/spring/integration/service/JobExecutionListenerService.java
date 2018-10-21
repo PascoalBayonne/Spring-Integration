@@ -5,5 +5,5 @@ import org.springframework.batch.core.JobExecution;
 import java.util.concurrent.Future;
 
 public interface JobExecutionListenerService {
-     Future<JobExecution> computeExecutionListener(JobExecution jobExecution);
+    Future<JobExecution> computeExecutionListener(JobExecution jobExecution);
 }

@@ -40,12 +40,26 @@
         </beans:property>
     </beans:bean>
 
+    <!--LISTENERS-->
+    <beans:bean id="jobListenerManager" class="com.pascoal.spring.batch.listener.CustomJobExecutionListener">
+        <beans:property name="fileOutput" value="${io.fileOutput}"/>
+    </beans:bean>
+    
+    <beans:bean id="skipPolicy" class="com.pascoal.spring.batch.listener.CustomSkipPolicy">
+        <beans:property name="skipLimit" value="${io.error.skipLimit}"/>
+        <beans:property name="folderWithLinesSkipped" value="${io.folderWithLinesSkipped}"/>
+    </beans:bean>
+    <!--LISTENERS-->
+
     <job id="importCustomers">
         <step id="loadCustomers">
             <tasklet>
-                <chunk reader="itemReader" writer="itemWriter" commit-interval="300"/>
+                <chunk reader="itemReader" writer="itemWriter" skip-policy="skipPolicy" commit-interval="300"/>
             </tasklet>
         </step>
+        <listeners>
+            <listener ref="jobListenerManager"/>
+        </listeners>
     </job>
 
 
