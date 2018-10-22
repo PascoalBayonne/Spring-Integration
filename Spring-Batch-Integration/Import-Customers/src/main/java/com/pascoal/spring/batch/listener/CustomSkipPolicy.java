@@ -42,7 +42,7 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
 
             int lineNumber = fileParseException.getLineNumber();
             try {
-                writeTheLineSkippedIntoFile(folderLocation,lineNumber);
+                writeTheLineSkippedIntoFile(folderLocation, lineNumber);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -54,29 +54,29 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
 
     private void writeTheLineSkippedIntoFile(File folderLocation, int lineNumberSkipped) throws IOException {
         logger.info("Writing the line skipped into a file");
-        //AWARE for files error we must create the error file base on the name of file which is being processed with error as suffix
-        //Files.createFile()
+
         try {
             Path folder = folderLocation.toPath();
             if (Files.notExists(folder)) {
+                //Of course the folder must exist {afterPropertiesSet()-> prevents this} but let me just joke a bit
                 Files.createDirectory(folder);
                 logger.info("folder does not exists. Creating ...");
             }
 
             Path fileWithSkippedLinesToBeCreated =
-                    folder.resolve(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-hh")) + "_ERROR");
+                    folder.resolve(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-hh")) + "_ERROR");//TODO problem if job runs multiple times in a day :)
 
-            if (Files.notExists(fileWithSkippedLinesToBeCreated)){
+            if (Files.notExists(fileWithSkippedLinesToBeCreated)) {
                 Path fileWithLinesSkipped = Files.createFile(fileWithSkippedLinesToBeCreated);
                 logger.info("Creating a new file ..." + fileWithLinesSkipped.toAbsolutePath());
             }
 
 
             Charset UTF_8 = StandardCharsets.UTF_8;
-            String lineSkipped = String.valueOf(lineNumberSkipped+"\n");
+            String lineSkipped = String.valueOf(lineNumberSkipped + "\n");
 
             logger.info("Writing the number of line which was skipped into the file...");
-            Files.write(fileWithSkippedLinesToBeCreated.toAbsolutePath(), lineSkipped.getBytes(UTF_8),StandardOpenOption.APPEND);
+            Files.write(fileWithSkippedLinesToBeCreated.toAbsolutePath(), lineSkipped.getBytes(UTF_8), StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             logger.info(e.getMessage());
@@ -89,7 +89,7 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
         this.skipLimit = skipLimit;
     }
 
-    public void setfolderLocation(File folderLocation) {
+    public void setFolderLocation(File folderLocation) {
         this.folderLocation = folderLocation;
     }
 
