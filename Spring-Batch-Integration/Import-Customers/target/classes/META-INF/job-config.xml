@@ -47,7 +47,7 @@
     
     <beans:bean id="skipPolicy" class="com.pascoal.spring.batch.listener.CustomSkipPolicy">
         <beans:property name="skipLimit" value="${io.error.skipLimit}"/>
-        <beans:property name="folderWithLinesSkipped" value="${io.folderWithLinesSkipped}"/>
+        <beans:property name="folderLocation" value="${io.folderWithLinesSkipped}"/>
     </beans:bean>
     <!--LISTENERS-->
 

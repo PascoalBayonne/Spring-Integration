@@ -23,7 +23,7 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
     private static final Logger logger = Logger.getLogger(CustomSkipPolicy.class.getName());
 
     private Long skipLimit;
-    private File folderWithLinesSkipped;
+    private File folderLocation;
 
     @Override
     public boolean shouldSkip(Throwable exception, int skipCount) throws SkipLimitExceededException {
@@ -31,15 +31,18 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
             return false;
         } else if ((exception instanceof FlatFileParseException) && (skipCount <= skipLimit)) {
             FlatFileParseException fileParseException = (FlatFileParseException) exception;
+
             StringBuilder errorMessage = new StringBuilder();
+
             errorMessage.append("Error while processing the line number:{ ").append(fileParseException.getLineNumber()).append("}");
             errorMessage.append("\nThe line which was skipped is \n");
             errorMessage.append(fileParseException.getInput());
+
             logger.info(errorMessage.toString());
 
             int lineNumber = fileParseException.getLineNumber();
             try {
-                writeTheLineSkippedIntoFile(folderWithLinesSkipped,lineNumber);
+                writeTheLineSkippedIntoFile(folderLocation,lineNumber);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,28 +52,31 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
         return false;
     }
 
-    private void writeTheLineSkippedIntoFile(File folderWithLinesSkipped, int lineNumberSkipped) throws IOException {
+    private void writeTheLineSkippedIntoFile(File folderLocation, int lineNumberSkipped) throws IOException {
         logger.info("Writing the line skipped into a file");
         //AWARE for files error we must create the error file base on the name of file which is being processed with error as suffix
         //Files.createFile()
         try {
-            Path folder = folderWithLinesSkipped.toPath();
+            Path folder = folderLocation.toPath();
             if (Files.notExists(folder)) {
                 Files.createDirectory(folder);
                 logger.info("folder does not exists. Creating ...");
             }
 
             Path fileWithSkippedLinesToBeCreated =
-                    folder.resolve(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-hh-mm-ss")) + "_ERROR");
+                    folder.resolve(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-mm-dd-hh")) + "_ERROR");
 
-            Path fileWithLinesSkipped = Files.createFile(fileWithSkippedLinesToBeCreated);
-            logger.info("Creating a new file ..." + fileWithLinesSkipped.toAbsolutePath());
+            if (Files.notExists(fileWithSkippedLinesToBeCreated)){
+                Path fileWithLinesSkipped = Files.createFile(fileWithSkippedLinesToBeCreated);
+                logger.info("Creating a new file ..." + fileWithLinesSkipped.toAbsolutePath());
+            }
+
 
             Charset UTF_8 = StandardCharsets.UTF_8;
-            String lineSkipped = String.valueOf(lineNumberSkipped);
+            String lineSkipped = String.valueOf(lineNumberSkipped+"\n");
 
             logger.info("Writing the number of line which was skipped into the file...");
-            Files.write(fileWithLinesSkipped, lineSkipped.getBytes(UTF_8),StandardOpenOption.APPEND);
+            Files.write(fileWithSkippedLinesToBeCreated.toAbsolutePath(), lineSkipped.getBytes(UTF_8),StandardOpenOption.APPEND);
 
         } catch (IOException e) {
             logger.info(e.getMessage());
@@ -83,13 +89,13 @@ public class CustomSkipPolicy implements SkipPolicy, InitializingBean {
         this.skipLimit = skipLimit;
     }
 
-    public void setFolderWithLinesSkipped(File folderWithLinesSkipped) {
-        this.folderWithLinesSkipped = folderWithLinesSkipped;
+    public void setfolderLocation(File folderLocation) {
+        this.folderLocation = folderLocation;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(folderWithLinesSkipped, "The Folder doesn't exists");
+        Assert.notNull(folderLocation, "The Folder doesn't exists");
         Assert.notNull(skipLimit, "Skip limit is null.");
     }
 }
