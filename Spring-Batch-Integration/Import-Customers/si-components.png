@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>SpringIntegration</ID>
+  <OriginalElement>appContextPath=C:/Users/eddyb/Documents/SI-Interation/Spring-Batch-Integration/Import-Customers/src/main/resources/META-INF/si-components.xml;appContextName=si-components</OriginalElement>
+  <nodes>
+    <node x="712.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;bean_name=runJob</node>
+    <node x="356.0" y="-262.40238095238095">module=Import-Customers;fileset=fileset;bean_name=jobExecutionRouter</node>
+    <node x="1068.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;tag=int:logging-channel-adapter;offset=2805</node>
+    <node x="534.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=requestChannel</node>
+    <node x="0.0" y="-262.40238095238095">module=Import-Customers;fileset=fileset;bean_class=org.springframework.batch.core.JobExecutionListener;bean_name=notificationExecutionsListener</node>
+    <node x="0.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;bean_name=pollDataFile</node>
+    <node x="356.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;bean_name=fileToJobLaunchRequest</node>
+    <node x="178.0" y="-262.40238095238095">module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=jobExecutions</node>
+    <node x="178.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=inboundFileChannel</node>
+    <node x="890.0" y="-118.70119047619048">module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=jobExitStatusChannel</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=requestChannel" target="module=Import-Customers;fileset=fileset;bean_name=runJob">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_name=pollDataFile" target="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=inboundFileChannel">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=inboundFileChannel" target="module=Import-Customers;fileset=fileset;bean_name=fileToJobLaunchRequest">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_name=runJob" target="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=jobExitStatusChannel">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_name=fileToJobLaunchRequest" target="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=requestChannel">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=jobExecutions" target="module=Import-Customers;fileset=fileset;bean_name=jobExecutionRouter">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=jobExitStatusChannel" target="module=Import-Customers;fileset=fileset;tag=int:logging-channel-adapter;offset=2805">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+    <edge source="module=Import-Customers;fileset=fileset;bean_class=org.springframework.batch.core.JobExecutionListener;bean_name=notificationExecutionsListener" target="module=Import-Customers;fileset=fileset;bean_class=org.springframework.integration.channel.DirectChannel;bean_name=jobExecutions">
+      <point x="62.0" y="-0.0" />
+      <point x="-62.0" y="-0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.9019448946515397" x="575.0" y="-133.99999999999997" />
+  <SelectedNodes>
+    <node>module=Import-Customers;fileset=fileset;bean_name=runJob</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Show Labels</Category>
+  </Categories>
+</Diagram>
+
